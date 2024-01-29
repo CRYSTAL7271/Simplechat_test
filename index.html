@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
 </head>
 <body>
     <h1>Simple Chat</h1>
     <div id="chat"></div>
     <form id="messageForm" action="" method="post">
-        <input type="text" id="messageInput" autocomplete="off">
+        <input type="text" id="usernameInput" placeholder="Username" autocomplete="off">
+        <input type="text" id="messageInput" placeholder="Message" autocomplete="off">
         <button type="submit">Send</button>
     </form>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
 
@@ -23,11 +24,12 @@
 
         document.getElementById('messageForm').onsubmit = function(event) {
             event.preventDefault();
+            var username = document.getElementById('usernameInput').value;
             var message = document.getElementById('messageInput').value;
-            socket.emit('message', message);
-            document.getElementById('chat').innerHTML += '<p>You: ' + message + '</p>';
+            socket.emit('message', {'username': username, 'message': message});
             document.getElementById('messageInput').value = '';
         };
     </script>
 </body>
 </html>
+
